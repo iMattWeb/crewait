@@ -48,7 +48,7 @@ module Crewait
       connection = ActiveRecord::Base.connection
       database, adapter = connection.current_database, connection.adapter_name
       sql = case adapter.downcase
-      when /postgresql|postgis/
+      when /postgresql|postgis/i
         "SELECT nextval('#{self.table_name}_id_seq')"
       when /mysql/
         "SELECT auto_increment FROM information_schema.tables WHERE table_name='#{self.table_name}' AND table_schema ='#{database}'"
@@ -57,7 +57,7 @@ module Crewait
       end
       results = ActiveRecord::Base.connection.execute(sql)
       case adapter.downcase
-      when /postgresql|postgis/
+      when /postgresql|postgis/i
         results[0]["nextval"].to_i
       when 'mysql'
         results.fetch_hash['auto_increment'].to_i
